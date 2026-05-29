@@ -18,14 +18,3 @@ class Result_file:
     def get_stat_json(self):
         return json.dumps(self.data, ensure_ascii=False)
     
-result = Result_file()
-
-result.add_information('spam', 'email1')
-result.add_information('ham', 'email2')
-result.add_information('error', 'email3')
-
-log=result.get_log_list()
-for line in log:
-    print(line)
-stat_json=result.get_stat_json()
-print(stat_json)
