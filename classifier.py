@@ -1,3 +1,5 @@
+#Надо будет ещё раз подумать про категории и ключевые слова перебрать
+
 from dataclasses import dataclass, field
 import json
 from pathlib import Path
