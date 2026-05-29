@@ -19,7 +19,11 @@ class Email:
 def cycle_in_dir(dirpath : Path):
 
     for item in dirpath.iterdir():
-        create_letter_object(item)
+        if item.is_file() and item.suffix.lower() == '.txt':
+            create_letter_object(item)
+        else:
+            #logger.error
+            ...
 
 def create_letter_object(file_path):
     try:
@@ -46,10 +50,6 @@ def create_letter_object(file_path):
                 else:
                     letter_object.text += stripped
             #classifier.analyse
-
-    except FileNotFoundError:
-        #logger.error
-        print("Файл не найден")
     except Exception as e:
         #logger.error
         print(f"Ошибка: {e}")
