@@ -1,3 +1,5 @@
+#Надо будет добавить обработку json и разобраться с именами категорий
+
 import sys
 import os
 from processor import cycle_in_dir
