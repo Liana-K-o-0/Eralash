@@ -111,6 +111,5 @@ class Process:
         target_path = target_dir/filepath.name
         shutil.move(str(filepath),str(target_path))
 
-        print("error in put_to_folder")
         self.result_file.add_information(category,filepath.name)
 
