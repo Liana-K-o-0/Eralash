@@ -1,12 +1,17 @@
-#Надо будет добавить обработку json и разобраться с именами категорий
-
 import sys
 import os
 from processor import cycle_in_dir
 from logger import Result_file
 import json
+from classifier import EmailClassifier
+from pathlib import Path
+
+
 
 def main():
+
+    classifier = EmailClassifier()
+
     outbox_dir = "outbox"
     categories = ["черновики", "важное", "спам", "ошибки", "неотсортированное"]
     for category in categories:
@@ -14,16 +19,32 @@ def main():
 
     directory_path = "inbox"
     show_logs = False
+    config_file = None
 
     if len(sys.argv) > 1:
-        for arg in sys.argv[1:]:
+        i = 1
+        while i < len(sys.argv):
+            arg = sys.argv[i]
             if arg == "--show-logs":
                 show_logs = True
+                i += 1
+            elif arg == "--config":
+                if i + 1 < len(sys.argv):
+                    config_file = sys.argv[i + 1]
+                    i += 2
+                else:
+                    print("Ну ты чё дурак?")
+                    return
             elif not arg.startswith("--"):
                 directory_path = arg
+                i += 1
+            else: i += 1
 
-    print(f"Скрипт запущен. Путь к папке: {directory_path}")
-    cycle_in_dir(directory_path)
+    if config_file:
+        if os.path.exists(config_file):
+            classifier.add_rules(config_file)
+
+    cycle_in_dir(Path(directory_path), classifier)
     logs_list = Result_file.get_log_list()
     json_stat = Result_file.get_stat_json()
 
@@ -35,14 +56,13 @@ def main():
         f_log.write(json_logs)
 
     if show_logs:
-        print("\n--- ИТОГОВАЯ СТАТИСТИКА ---")
+        print("\n---ИТОГОВАЯ СТАТИСТИКА---")
         stat_dict = json.loads(json_stat)
         print(json.dumps(stat_dict, ensure_ascii=False, indent=4))
 
-        print("\n--- ИТОГОВЫЙ ЛОГ ---")
+        print("\n---ИТОГОВЫЙ ЛОГ---")
         for line in logs_list:
             print(line)
-
 
 if __name__ == "__main__":
     main()
