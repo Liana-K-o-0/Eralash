@@ -27,10 +27,6 @@ class Process:
                 self.process_file(item, classifier)
 
     def process_file(self,item, classifier):
-        if item.name == '.DS_Store' or item.name.startswith('.'):
-            print("error in process_file :item.name == '.DS_Store' or item.name.startswith('.') ")
-            self.result_file.add_information('error1',item.name)
-            return
         if item.suffix in ('.txt', '.eml') :
             self.create_letter_obj_txt(item, classifier)
         elif item.suffix == '.json':
@@ -38,8 +34,8 @@ class Process:
         elif item.suffix == '':
             self.try_create_obj_unknown(item, classifier)
         else:
-            print("error in process_file ")
-            self.result_file.add_information('error2',item.name)
+            self.result_file.add_information('error',item.name)
+            self.put_to_folder("Нечитаемый формат",item)
             return
 
     def try_create_obj_unknown(self,file_path, classifier):
@@ -49,12 +45,14 @@ class Process:
             if data:
                 self.create_letter_obj_txt(file_path, classifier)
             else:
-                print("error in try_create_obj_unknown after opening unknowm ")
-                self.result_file.add_information('error3',file_path.name)
+                #print("error in try_create_obj_unknown after opening unknowm ")
+                self.result_file.add_information('error',file_path.name)
+                self.put_to_folder("Нечитаемый формат",file_path)
                 return
         except Exception as e:
-            print("error in try_create_obj_unknown ")
-            self.result_file.add_information('error4',file_path.name)
+            #print("error in try_create_obj_unknown ")
+            self.result_file.add_information('error',file_path.name)
+            self.put_to_folder("Нечитаемый формат",filepath=file_path)
 
     def create_letter_obj_json(self,file_path, classifier):
         try:
@@ -71,8 +69,8 @@ class Process:
             
             self.put_to_folder(classifier.classify(letter_object),file_path)
         except Exception as e:
-            print("error in create_letter_obj_json ")
-            self.result_file.add_information('error5',file_path.name)
+            self.result_file.add_information('error',file_path.name)
+            self.put_to_folder("Нечитаемый формат",filepath=file_path)
 
     def create_letter_obj_txt(self,file_path, classifier):
         try:
@@ -101,6 +99,7 @@ class Process:
             self.put_to_folder(classifier.classify(letter_object),file_path)
         except Exception as e:
             self.result_file.add_information('error6',file_path.name)
+            self.put_to_folder("Нечитаемый формат",filepath=file_path)
             
 
     def put_to_folder(self,category:str,filepath):
