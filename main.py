@@ -1,6 +1,6 @@
 import sys
 import os
-from processor import cycle_in_dir
+from processor import Processor
 from logger import Result_file
 import json
 from classifier import EmailClassifier
@@ -11,7 +11,8 @@ from pathlib import Path
 def main():
 
     classifier = EmailClassifier()
-
+    processor = Processor()
+    
     outbox_dir = "outbox"
     categories = ["черновики", "важное", "спам", "ошибки", "неотсортированное"]
     for category in categories:
@@ -44,7 +45,7 @@ def main():
         if os.path.exists(config_file):
             classifier.add_rules(config_file)
 
-    cycle_in_dir(Path(directory_path), classifier)
+    processor.cycle_in_dir(Path(directory_path), classifier)
     logs_list = Result_file.get_log_list()
     json_stat = Result_file.get_stat_json()
 
