@@ -7,8 +7,6 @@ from classifier import EmailClassifier
 from processor import Process
 from pathlib import Path
 
-
-
 def main():
 
     classifier = EmailClassifier()
