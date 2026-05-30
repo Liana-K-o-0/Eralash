@@ -33,11 +33,11 @@ class Rule:
         )
 
 class EmailClassifier:
-    def __init__(self, rules=None, default_category="неотсортированное"):
+    def __init__(self, rules=None):
         if rules is None:
             rules = self.get_rules()
         self.rules = sorted(rules, key=lambda x: x.priority)
-        self.default_category = default_category
+        self.default_category = "неотсортированное"
     
     def get_rules(self):
         return [
