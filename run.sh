@@ -1,7 +1,15 @@
 #!/bin/bash
+ 
+INBOX="inbox"
+ 
+case "$OSTYPE" in
+    msys*|cygwin*|win*) PY="py" ;;
+    *)                  PY="python3" ;;
+esac
 
-echo "Запускаю обработку писем..."
+if [ ! -d "$INBOX" ]; then
+    echo "Ошибка: папка '$INBOX' не найдена"
+    exit 1
+fi
 
-py example.py
-
-echo "Обработка завершена"
+"$PY" main.py "$INBOX" --show-logs
