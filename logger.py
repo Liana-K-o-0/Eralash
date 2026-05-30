@@ -13,7 +13,7 @@ class Result_file:
         if category != 'error':
             self.log.append(f'{email_name} ---> {category}')
         else:
-            self.log.append(f'{email_name} ---> Файл не удалось отнести ни к одной категории')
+            self.log.append(f'{email_name} ---> Файл имеет нечитаемый формат')
         
     def get_log_list(self):
         return self.log
