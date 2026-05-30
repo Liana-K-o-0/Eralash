@@ -75,7 +75,6 @@ class Process:
             self.result_file.add_information('error5',file_path.name)
 
     def create_letter_obj_txt(self,file_path, classifier):
-        print(f"Processing file: {file_path}")
         try:
             with open(file_path,'r', encoding='utf-8') as file:
                 letter_object = Email(file_path=file_path)
