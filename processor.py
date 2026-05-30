@@ -100,14 +100,13 @@ class Process:
                         letter_object.text += stripped
                 self.put_to_folder(classifier.classify(letter_object),file_path)
         except Exception as e:
-            print("error in create_letter_obj_txt ")
             self.result_file.add_information('error',file_path.name)
             
 
     def put_to_folder(self,category:str,filepath):
 
         target_dir = Path(f"outbox/{category}")
-        target_dir.mkdir(exist_ok=True)
+        target_dir.mkdir(exist_ok=True,parents=True)
         target_path = target_dir/filepath.name
         shutil.move(str(filepath),str(target_path))
 
