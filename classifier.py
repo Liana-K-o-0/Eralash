@@ -29,7 +29,7 @@ class Rule:
             category=inf["category"],
             keywords=inf.get("keywords", []),
             from_contains=inf.get("from_contains", []),
-            priority=inf.get("priority", 1000)
+            priority=inf.get("priority", 100)
         )
 
 class EmailClassifier:
