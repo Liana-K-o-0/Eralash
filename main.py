@@ -29,7 +29,7 @@ def main():
                     config_file = sys.argv[i + 1]
                     i += 2
                 else:
-                    print("Ну ты чё дурак?")
+                    print("Ошибка")
                     return
             elif not arg.startswith("--"):
                 directory_path = arg
