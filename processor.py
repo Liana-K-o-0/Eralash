@@ -3,7 +3,6 @@ from pathlib import Path
 from dataclasses import dataclass
 import shutil
 from collections import defaultdict
-from classifier import EmailClassifier
 from logger import Result_file
 
 
@@ -19,41 +18,48 @@ class Email:
 class Process:
 
     def __init__(self):
-        self.classifier = EmailClassifier()
         self.result_file=Result_file()
         self.category = ""
 
-    def cycle_in_dir(self,dirpath : Path, classifier = None):
-
+    def cycle_in_dir(self,dirpath : Path, classifier):
         for item in dirpath.iterdir():
             if item.is_file():
-                self.process_file(item, classifier = None)
+                self.process_file(item, classifier)
 
-    def process_file(self,item, classifier = None):
+    def process_file(self,item, classifier):
         if item.name == '.DS_Store' or item.name.startswith('.'):
+            print("error in process_file :item.name == '.DS_Store' or item.name.startswith('.') ")
             self.result_file.add_information('error',item.name)
             return
-        if item.suffix == '.txt':
-            self.create_letter_obj_txt(item, classifier = None)
+        if item.suffix in ('.txt', '.eml') :
+            self.create_letter_obj_txt(item, classifier)
         elif item.suffix == '.json':
-            self.create_letter_obj_json(item, classifier = None)
+            self.create_letter_obj_json(item, classifier)
         elif item.suffix == '':
-            self.try_create_obj(item, classifier = None)
+            self.try_create_obj_unknown(item, classifier)
+        else:
+            print("error in process_file ")
+            self.result_file.add_information('error',item.name)
+            return
 
-    def try_create_obj(self,file_path, classifier = None):
+    def try_create_obj_unknown(self,file_path, classifier):
         try:
             with open(file_path, "r",encoding='utf-8') as file:
                 data = file.read()
             if data:
-                self.create_letter_obj_txt(file_path)
+                self.create_letter_obj_txt(file_path, classifier)
+            else:
+                print("error in try_create_obj_unknown after opening unknowm ")
+                self.result_file.add_information('error',file_path.name)
+                return
         except Exception as e:
+            print("error in try_create_obj_unknown ")
             self.result_file.add_information('error',file_path.name)
 
-    def create_letter_obj_json(self,file_path, classifier = None):
+    def create_letter_obj_json(self,file_path, classifier):
         try:
             with open(file_path, 'r', encoding='utf-8') as f:
                 data = json.load(f)
-                letter_object = Email(file_path=file_path)
             
             sender = data.get('from', '')
             topic = data.get('subject', '')
@@ -61,13 +67,14 @@ class Process:
 
             if isinstance(body, (dict, list)):
                 body = json.dumps(body, ensure_ascii=False)
-            email_obj = Email(file_path=file_path, sender=sender, topic=topic, text=body)
+            letter_object = Email(file_path=file_path, sender=sender, topic=topic, text=body)
             
-            self.category = classifier.classify(letter_object)
+            self.put_to_folder(classifier.classify(letter_object),file_path)
         except Exception as e:
+            print("error in create_letter_obj_json ")
             self.result_file.add_information('error',file_path.name)
 
-    def create_letter_obj_txt(self,file_path, classifier = None):
+    def create_letter_obj_txt(self,file_path, classifier):
         try:
             with open(file_path,'r', encoding='utf-8') as file:
                 letter_object = Email(file_path=file_path)
@@ -91,20 +98,19 @@ class Process:
                             letter_object.text += stripped
                     else:
                         letter_object.text += stripped
-                self.category = classifier.classify(letter_object)
+                self.put_to_folder(classifier.classify(letter_object),file_path)
         except Exception as e:
+            print("error in create_letter_obj_txt ")
             self.result_file.add_information('error',file_path.name)
             
 
     def put_to_folder(self,category:str,filepath):
 
-        outbox = Path("")#
-        # if not filepath.is_file():
-        #     print(f"Файл не найден: {filepath}")
-        target_dir = outbox / category 
+        target_dir = Path(f"outbox/{category}")
         target_dir.mkdir(exist_ok=True)
         target_path = target_dir/filepath.name
         shutil.move(str(filepath),str(target_path))
 
+        print("error in put_to_folder")
         self.result_file.add_information(category,filepath.name)
 
