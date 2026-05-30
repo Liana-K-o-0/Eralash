@@ -14,7 +14,7 @@ def main():
     classifier = EmailClassifier()
     process = Process()
     outbox_dir = "outbox"
-    categories = ["черновики", "важное", "спам", "ошибки", "неотсортированное"]
+    categories = ["технеческие сбои и проблемы ПО", "доступы, права, учётные записи", "документы, бухгалтерия, юридические запросы", "прочие запросы и увидомления", "спам, фишинг, вредоносные", "неотсортированное"]
     for category in categories:
         os.makedirs(os.path.join(outbox_dir, category), exist_ok=True)
 
