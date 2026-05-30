@@ -23,24 +23,24 @@ class Process:
         self.result_file=Result_file()
         self.category = ""
 
-    def cycle_in_dir(self,dirpath : Path):
+    def cycle_in_dir(self,dirpath : Path, classifier = None):
 
         for item in dirpath.iterdir():
             if item.is_file():
-                self.process_file(item)
+                self.process_file(item, classifier = None)
 
-    def process_file(self,item):
+    def process_file(self,item, classifier = None):
         if item.name == '.DS_Store' or item.name.startswith('.'):
             self.result_file.add_information('error',item.name)
             return
         if item.suffix == '.txt':
-            self.create_letter_obj_txt(item)
+            self.create_letter_obj_txt(item, classifier = None)
         elif item.suffix == '.json':
-            self.create_letter_obj_json(item)
+            self.create_letter_obj_json(item, classifier = None)
         elif item.suffix == '':
-            self.try_create_obj(item)
+            self.try_create_obj(item, classifier = None)
 
-    def try_create_obj(self,file_path):
+    def try_create_obj(self,file_path, classifier = None):
         try:
             with open(file_path, "r",encoding='utf-8') as file:
                 data = file.read()
@@ -49,7 +49,7 @@ class Process:
         except Exception as e:
             self.result_file.add_information('error',file_path.name)
 
-    def create_letter_obj_json(self,file_path):
+    def create_letter_obj_json(self,file_path, classifier = None):
         try:
             with open(file_path, 'r', encoding='utf-8') as f:
                 data = json.load(f)
@@ -63,11 +63,11 @@ class Process:
                 body = json.dumps(body, ensure_ascii=False)
             email_obj = Email(file_path=file_path, sender=sender, topic=topic, text=body)
             
-            self.category = self.classifier.classify(letter_object)
+            self.category = classifier.classify(letter_object)
         except Exception as e:
             self.result_file.add_information('error',file_path.name)
 
-    def create_letter_obj_txt(self,file_path):
+    def create_letter_obj_txt(self,file_path, classifier = None):
         try:
             with open(file_path,'r', encoding='utf-8') as file:
                 letter_object = Email(file_path=file_path)
@@ -91,7 +91,7 @@ class Process:
                             letter_object.text += stripped
                     else:
                         letter_object.text += stripped
-                self.category = self.classifier.classify(letter_object)
+                self.category = classifier.classify(letter_object)
         except Exception as e:
             self.result_file.add_information('error',file_path.name)
             
