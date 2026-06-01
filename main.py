@@ -6,6 +6,7 @@ import json
 from classifier import EmailClassifier
 from processor import Process
 from pathlib import Path
+from matplotlib import pyplot as plt
 
 def main():
 
@@ -15,6 +16,7 @@ def main():
 
     directory_path = "inbox"
     show_logs = False
+    show_pie = False
     config_file = None
 
     if len(sys.argv) > 1:
@@ -23,6 +25,9 @@ def main():
             arg = sys.argv[i]
             if arg == "--show-logs":
                 show_logs = True
+                i += 1
+            elif arg == "--pie":
+                show_pie = True
                 i += 1
             elif arg == "--config":
                 if i + 1 < len(sys.argv):
@@ -59,6 +64,12 @@ def main():
         print("\n---ИТОГОВЫЙ ЛОГ---")
         for line in logs_list:
             print(line)
+    
+    if show_pie:
+        fig = process.result_file.make_pie()
+        fig.savefig("outbox/pie.png")
+        print("Диаграмма сохранена: outbox/pie.png")
+        plt.show()
 
 if __name__ == "__main__":
     main()
