@@ -53,7 +53,7 @@ class EmailClassifier:
                     "установить новый клиент", "данные банковской карты", "выиграли iphone",
                     "эксклюзивная акция", "приз", "розыгрыш",
                     "secure-login-verify", "totally-not-spam", "cdn-service.net"
-                ],
+                    ],
                 from_contains=["@spam", "newsletter@", "promo@", "noreply-marketing@"]
                 ),
                 Rule(
