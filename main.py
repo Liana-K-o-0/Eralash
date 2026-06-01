@@ -67,8 +67,8 @@ def main():
     
     if show_pie:
         fig = process.result_file.make_pie()
-        fig.savefig("outbox/pie.png")
-        print("Диаграмма сохранена: outbox/pie.png")
+        fig.savefig("pie.png")
+        print("Диаграмма сохранена: pie.png")
         plt.show()
 
 if __name__ == "__main__":
