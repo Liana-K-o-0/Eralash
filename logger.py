@@ -10,10 +10,7 @@ class Result_file:
 
     def add_information(self, category, email_name):
         self.data[category]+=1
-        if category != 'error':
-            self.log.append(f'{email_name} ---> {category}')
-        else:
-            self.log.append(f'{email_name} ---> Файл имеет нечитаемый формат')
+        self.log.append(f'{email_name} ---> {category}')
         
     def get_log_list(self):
         return self.log
