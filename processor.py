@@ -34,8 +34,7 @@ class Process:
         elif item.suffix == '':
             self.try_create_obj_unknown(item, classifier)
         else:
-            self.result_file.add_information('error',item.name)
-            self.put_to_folder("Нечитаемый формат",item)
+            self.put_to_folder("нечитаемый формат",item)
             return
 
     def try_create_obj_unknown(self,file_path, classifier):
@@ -46,13 +45,11 @@ class Process:
                 self.create_letter_obj_txt(file_path, classifier)
             else:
                 #print("error in try_create_obj_unknown after opening unknowm ")
-                self.result_file.add_information('error',file_path.name)
-                self.put_to_folder("Нечитаемый формат",file_path)
+                self.put_to_folder("нечитаемый формат",file_path)
                 return
         except Exception as e:
             #print("error in try_create_obj_unknown ")
-            self.result_file.add_information('error',file_path.name)
-            self.put_to_folder("Нечитаемый формат",filepath=file_path)
+            self.put_to_folder("нечитаемый формат",filepath=file_path)
 
     def create_letter_obj_json(self,file_path, classifier):
         try:
@@ -69,8 +66,7 @@ class Process:
             
             self.put_to_folder(classifier.classify(letter_object),file_path)
         except Exception as e:
-            self.result_file.add_information('error',file_path.name)
-            self.put_to_folder("Нечитаемый формат",filepath=file_path)
+            self.put_to_folder("нечитаемый формат",filepath=file_path)
 
     def create_letter_obj_txt(self,file_path, classifier):
         try:
@@ -98,8 +94,7 @@ class Process:
                         letter_object.text += stripped
             self.put_to_folder(classifier.classify(letter_object),file_path)
         except Exception as e:
-            self.result_file.add_information('error6',file_path.name)
-            self.put_to_folder("Нечитаемый формат",filepath=file_path)
+            self.put_to_folder("нечитаемый формат",filepath=file_path)
             
 
     def put_to_folder(self,category:str,filepath):
