@@ -103,8 +103,8 @@ def test_processor_unreadable_format(processor: Process, classifier: EmailClassi
     processor.cycle_in_dir(inbox_dir, classifier)
     
     try:
-        assert Path("outbox/Нечитаемый формат/image.png").exists()
-        assert processor.result_file.data['error'] == 1
+        assert Path("outbox/нечитаемый формат/image.png").exists()
+        assert processor.result_file.data['нечитаемый формат'] == 1
         print("ok")
     except AssertionError:
         print("error")
